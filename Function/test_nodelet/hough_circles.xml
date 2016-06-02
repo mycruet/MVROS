@@ -1,0 +1,7 @@
+<library path="lib/libhough_circles">
+  <class name="test_nodelet/hough_circles_nodelet" type="test_nodelet::hough_circles_nodelet" base_class_type="nodelet::Nodelet">
+    <description> 
+      A node to add a value and republish.
+    </description>
+  </class>
+</library>

@@ -1,0 +1,25 @@
+<launch>  
+
+
+<node  
+pkg="test_nodelet"  
+type="imageSource"
+name="imageSource"  
+/>  
+
+<node  
+pkg="test_nodelet"  
+type="monoCalibrate"
+name="monoCalibrate" 
+launch-prefix="xterm -e"
+/>  
+
+<node  
+pkg="nodelet"  
+type="nodelet"
+name="hough"
+args="standalone test_nodelet/hough_circles_nodelet"
+launch-prefix="xterm -e"
+/> 
+
+</launch>
