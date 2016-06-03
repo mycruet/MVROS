@@ -30,6 +30,7 @@ private:
     Ui::testView *ui;
     QNode *qnode;
     QPixmap map;
+    QRect mapLocation;
 };
 
 #endif // TESTVIEW_H
