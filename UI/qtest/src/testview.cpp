@@ -68,6 +68,7 @@ void testView::imageShow(QImage q)
     //v = ui->verticalLayout_2->geometry();
    // qDebug(">>>>x:%d, y:%d", v.width(), v.height());
     //ui->verticalLayout_2->setGeometry(QRect(10, 10, v.width(), v.height()));
+    mapLocation = ui->frame->geometry();
     map = QPixmap::fromImage(q);
     this->update();
 }
@@ -76,7 +77,7 @@ void  testView::paintEvent(QPaintEvent *e)
 
     qDebug("draw............................................................");
     QPainter p(this);
-    p.drawPixmap(QPoint(0,0), map) ;
+    p.drawPixmap(QPoint(mapLocation.x(), mapLocation.y()), map) ;
 
 }
 void testView::canCalibrate()
