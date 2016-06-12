@@ -52,9 +52,6 @@ void testView::on_HoughCircles_clicked()
     qDebug(">>>>>>>>>>on_HoughCircles_clicked");
      ui->HoughCircles->setDisabled(true);
     qnode->houghCircle();
-
-
-
 }
 void testView::on_stop_clicked()
 {
@@ -64,13 +61,12 @@ void testView::on_stop_clicked()
 void testView::imageShow(QImage q)
 {
     qDebug(">>>>row:%d---col:%d", q.height(), q.width());
-    //QRect v;
-    //v = ui->verticalLayout_2->geometry();
-   // qDebug(">>>>x:%d, y:%d", v.width(), v.height());
-    //ui->verticalLayout_2->setGeometry(QRect(10, 10, v.width(), v.height()));
+
     mapLocation = ui->frame->geometry();
     map = QPixmap::fromImage(q);
-    this->update();
+   ui->frame->setMinimumSize(map.width(), map.height());
+   //this->adjustSize();
+   this->update();
 }
 void  testView::paintEvent(QPaintEvent *e)
 {
