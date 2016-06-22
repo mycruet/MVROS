@@ -47,8 +47,10 @@ bool boardCallback(test_nodelet::BoardInfo ::Request  &req,   test_nodelet::Boar
   // image_transport::Subscriber board_sub =  it.subscribe("boardImage", 1, imageCallback);
    //ros::ServiceServer service = nh.advertiseService("boardInfo", boardCallback);
 
-#if 1
-     cv::Mat frame  = cv::imread("/home/frank/testopenapp/circle.jpg", 1);
+#if 0
+     //cv::Mat frame  = cv::imread("/home/frank/testopenapp/circle.jpg", 1);
+     //cv::Mat frame  = cv::imread("/home/frank/testopenapp/circle.jpg", 1);
+     cv::Mat frame  = cv::imread("/home/gxf/circle.jpg", 1);
      //cv::Mat frame  = cv::imread("test0.jpg", 1);
      if(frame.empty())
      {
@@ -73,22 +75,29 @@ bool boardCallback(test_nodelet::BoardInfo ::Request  &req,   test_nodelet::Boar
 
 #endif
 
-#if 0
+#if 1
      cv::VideoCapture cap(0);
      // Check if video device can be opened with the given index
      if(!cap.isOpened()) return 1;
+
+
+     //cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+     //cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+
      cv::Mat frame;
      sensor_msgs::ImagePtr msg;
 
 
-     ros::Rate loop_rate(1500);
+     ros::Rate loop_rate(10);
      while (nh.ok())
      {
          cap >> frame;
          // Check if grabbed frame is actually full with some content
          if(!frame.empty())
          {
-             cv::imshow("view", frame);
+             //cv::imshow("view", frame);
+             //cv::resize(frame,frame,cv::Size(410,372),0,0,CV_INTER_LINEAR);  
+             //cv::waitKey(30);
              msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
              pub.publish(msg);
              cv::waitKey(1);
