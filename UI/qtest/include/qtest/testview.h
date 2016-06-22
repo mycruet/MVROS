@@ -23,6 +23,7 @@ public Q_SLOTS:
     void on_stop_clicked();
     void imageShow(QImage q);
     void canCalibrate();
+    void hasHoughed();
 
 protected:
 void paintEvent(QPaintEvent *);

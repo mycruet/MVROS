@@ -2,6 +2,7 @@
 #include "../include/qtest/qnode.h"
 #include "ui_testview.h"
 #include <QPainter>
+#include <QFile>  
 testView::testView(int argc, char **argv, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::testView), qnode(new QNode(argc, argv))
 {
@@ -42,8 +43,29 @@ void testView::on_Calibrate_clicked()
      if(qnode->calibrate())
      {
          //read A/D from database
-         ui->lineEdit->setText("00000000");
+        // ui->lineEdit->setText("00000000");
          ui->HoughCircles->setDisabled(false);
+
+
+         QFile file("/home/gxf/test_node/src/test_nodelet/tmp/calibrator.txt");  
+         if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {  
+            qDebug("Can't open the file!");  
+         } 
+         int i = 0; 
+         while(!file.atEnd()) {  
+            QByteArray line = file.readLine();  
+            QString str(line);  
+            qDebug(line.data()); 
+            if(i==14){
+               ui->lineEdit->setText(str);
+            }else if(i==19){
+               ui->lineEdit_2->setText(str);
+            }else if(i==22){
+               ui->lineEdit_3->setText(str);
+            }
+            i++;
+       //     qDebug()<<str<<endl;  //调试时，在console中输出   
+        }  
      }
 }
 
@@ -52,6 +74,8 @@ void testView::on_HoughCircles_clicked()
     qDebug(">>>>>>>>>>on_HoughCircles_clicked");
      ui->HoughCircles->setDisabled(true);
     qnode->houghCircle();
+    connect(qnode, SIGNAL(hasHoughed()), this, SLOT(hasHoughed()), Qt::BlockingQueuedConnection);
+
 }
 void testView::on_stop_clicked()
 {
@@ -67,6 +91,7 @@ void testView::imageShow(QImage q)
    ui->frame->setMinimumSize(map.width(), map.height());
    //this->adjustSize();
    this->update();
+   
 }
 void  testView::paintEvent(QPaintEvent *e)
 {
@@ -78,8 +103,32 @@ void  testView::paintEvent(QPaintEvent *e)
 }
 void testView::canCalibrate()
 {
-
+     qDebug("canCalibrate");  
      ui->Calibrate->setDisabled(false);
+
+}
+void testView::hasHoughed()
+{ 
+     qDebug("hasHoughed");  
+
+      QFile file("/home/gxf/test_node/src/test_nodelet/tmp/mycircle.txt");  
+         if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {  
+            qDebug("Can't open the file!");  
+         }  
+         int i=0;
+         while(!file.atEnd()) {  
+            QByteArray line = file.readLine();  
+            QString str(line);
+            qDebug(line.data());  
+            if(i==0){
+                ui->lineEdit_5->setText(str);
+            }else{
+                ui->lineEdit_4->setText(str);
+            } 
+            i++;
+            
+       //     qDebug()<<str<<endl;  //调试时，在console中输出   
+        }  
 
 }
 

@@ -90,23 +90,60 @@ bool QNode::boardInfoCallback(test_nodelet::BoardInfo ::Request  &req,   test_no
         return true;
     }
 
+
+void QNode::imageGoodEnoughCallback(const std_msgs::Bool& msg)
+    {
+    //标定图片已经足够了
+
+     ROS_ERROR("imageGoodEnoughCallback '%i' ",msg.data);
+      if(msg.data == 1){
+        
+            ROS_INFO("We can calibrate...imageGoodEnoughCallback.............................");
+            
+            Q_EMIT canCalibrate();
+            
+      }
+
+   }
+
+
+void QNode::hasHoughCallback(const std_msgs::String& msg)
+    {
+    //已经有霍夫数据了
+
+     ROS_ERROR("hasHoughCallback ");
+     Q_EMIT hasHoughed();
+   
+   }
+
 void   QNode::checkBoard()
 {
     ROS_INFO("checkBoard()................................");
     imageSub_.reset();
     boardImageSub_ = boost::make_shared< image_transport::Subscriber>(it_->subscribe("boardImage", 1, &QNode::imageCallback, this));
-    boardInfoService_ = nh_->advertiseService("boardInfo", &QNode::boardInfoCallback, this);
+//    boardInfoService_ = nh_->advertiseService("boardInfo", &QNode::boardInfoCallback, this);
+
+    chessboardCornersEnoughsub_ = boost::make_shared<ros::Subscriber>(nh_->subscribe("goodenoughTopic", 1, &QNode::imageGoodEnoughCallback, this));
+
 
 }
 
 void QNode::houghCircle()
 {
+    ROS_INFO("houghCircle()...........................ee.....");
     boardImageSub_.reset();
-    rejectCircleImageSub_ =  boost::make_shared< image_transport::Subscriber>(it_->subscribe("rejectCircleImage", 1, &QNode::imageCallback, this));
+    ROS_INFO("22houghCircle()................................");
+    rejectCircleImageSub_ =  boost::make_shared<image_transport::Subscriber>(it_->subscribe("rejectCircleImage", 1, &QNode::imageCallback, this));
+    
+    hasHoughSub_ =  boost::make_shared<ros::Subscriber>(nh_->subscribe("hasHough", 1, &QNode::hasHoughCallback, this));
 }
 
 bool QNode::calibrate()
 {
+    chessboardCornersEnoughsub_.reset();
+    ROS_INFO("calibrate()111>>>>>>>>>>>>>>>>>>>>>>>>>");
+//    boardImageSub_.reset();
+    ROS_INFO("calibrate()>>>>>>>>>>>>>>>>>>>>>>>>>");
     calibrateClient_  =  nh_->serviceClient<test_nodelet::Calibrate>("calibrates");
     test_nodelet::Calibrate  srv;
     srv.request.ready = true;
@@ -115,9 +152,12 @@ bool QNode::calibrate()
     {
         if(srv.response.isHough)
         {
+            ROS_INFO("scallxsss>>>>>>>>>>>>>>>>>>>>>>>>>");
             return true;
         }
     }
+    ROS_INFO("scallddddd>>>>>>>>>>>>>>>>>>>>>>>>>");
+
     return false;
 }
 

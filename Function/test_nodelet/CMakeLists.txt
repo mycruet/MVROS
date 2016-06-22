@@ -10,6 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   nodelet
   roscpp
   message_generation
+  rospy
+  std_msgs
   ##OpenCV
   ##sensor_msgs
 )

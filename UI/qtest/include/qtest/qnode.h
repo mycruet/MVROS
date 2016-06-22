@@ -8,6 +8,8 @@
 #include <image_transport/image_transport.h>
 #include <test_nodelet/BoardInfo.h>
 #include <test_nodelet/Calibrate.h>
+#include "std_msgs/Bool.h" 
+#include "std_msgs/String.h" 
 
 
 class QNode : public QThread
@@ -23,13 +25,15 @@ public:
      void  checkBoard();
      bool  calibrate();
      void  houghCircle();
-
+     void  imageGoodEnoughCallback(const std_msgs::Bool& msg);
+     void  hasHoughCallback(const std_msgs::String& msg);
 
  protected:
       void run();
 Q_SIGNALS:
       void imageShow(QImage q);
       void canCalibrate();
+      void hasHoughed();
 
 
 
@@ -44,6 +48,8 @@ Q_SIGNALS:
     boost::shared_ptr<image_transport::Subscriber>       rejectCircleImageSub_;
     ros::ServiceServer boardInfoService_;
     ros::ServiceClient calibrateClient_;
+    boost::shared_ptr< ros::Subscriber> chessboardCornersEnoughsub_;
+    boost::shared_ptr< ros::Subscriber> hasHoughSub_;
 };
 
 #endif // QNODE_H
